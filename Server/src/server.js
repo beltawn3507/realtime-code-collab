@@ -22,6 +22,7 @@ const io=new Server(server,{
 })
 
 //this will contain object with this 
+   // username
 	// roomId
 	// status
 	// cursorPosition
@@ -35,7 +36,7 @@ const getUsersinRoom=(roomId)=>{
    return userSocketmap.filter((user)=>user.roomId==roomId);
 }
 
-
+//get the id of the room from the socketid of the user
 const getRoomid=(socketId)=>{
    const roomId=userSocketmap.find((user)=>user.socketId==socketId).roomId;
 
@@ -45,6 +46,7 @@ const getRoomid=(socketId)=>{
    }
 }
 
+//can find the specific user using the socket id
 const getUserBySocketId=(socketId)=>{
    const requser=userSocketmap.find((user)=>user.socketId==socketId);
    if(!requser){
@@ -57,7 +59,31 @@ const getUserBySocketId=(socketId)=>{
 //all the socket.io logic will be implemented here
 io.on("connection",(socket)=>{
     //Handle all socket server actions
+    socket.on("join_request",({username,roomId})=>{
+      // console.log("Socket joining request received ",username,roomId);
+      // socket ko yeh users ke list bhejna padega aur join accepted message bhi
 
+
+      const isUsernameExists=getUsersinRoom(roomId).filter(u=>u.username==username);
+      if(isUsernameExists.length>0) {io.to(socket.id).emit("username_exists");return;}
+
+      const user={
+         username,
+         roomId,
+         status:"ONLINE",
+         cursorPosition:0,
+         typing:false,
+         socketId:socket.id,
+         currentfile:null
+      }
+
+      userSocketmap.push(user);
+      socket.join(roomId);
+      socket.broadcast.to(roomId).emit("user_joined",{user});
+      const users=getUsersinRoom(roomId);
+      console.log("sending data now ",users,user)
+      io.to(socket.id).emit("join_accepted",{user,users});//send the data of users and user that just joined
+    })
     
 })
 

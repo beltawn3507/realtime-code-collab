@@ -31,6 +31,7 @@ export const usesocketstore = create((set, get) => {
     const { setUsers, setcurrentuser, setstatus } = useappstore.getState();
     setUsers(users);
     setcurrentuser(user);
+    console.log("users already joined in the room are",useappstore.getState().users);
     setstatus("JOINED");
 
     if (user.length > 1) {
@@ -43,8 +44,9 @@ export const usesocketstore = create((set, get) => {
 
   const handleUserDisconnect = ({ user }) => {
     toast.success(`${user.username} left the Room`);
-    const { users, setUsers } = useappstore().getState();
+    const { users, setUsers } = useappstore.getState();
     setUsers(users.filter((u) => u.username != user.username));
+    console.log("users in current room after one disconnected",useappstore.getState().users)
   };
 
   //   ------------------------------------------------------------------------------------------------------------------------
@@ -61,7 +63,7 @@ export const usesocketstore = create((set, get) => {
     
     // this function helps to create a socket and set the socket in the store we can do a lot more event listening with this
     initializesocket: () => {
-      console.log("intialise socket initiated")
+      // console.log("intialise socket initiated")
       return new Promise((resolve, reject) => {
         if (get().socket) return resolve(get().socket); // already initialized
 

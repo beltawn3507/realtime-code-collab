@@ -38,12 +38,13 @@ const getUsersinRoom=(roomId)=>{
 
 //get the id of the room from the socketid of the user
 const getRoomid=(socketId)=>{
-   const roomId=userSocketmap.find((user)=>user.socketId==socketId).roomId;
-
-   if(!roomId){
-    console.log("there is no user with this username");
+   const user = userSocketmap.find((user)=>user.socketId==socketId);
+   
+   if(!user){
+    console.log("there is no user with this socket id");
     return null;
    }
+   return user.roomId;
 }
 
 //can find the specific user using the socket id
@@ -60,12 +61,11 @@ const getUserBySocketId=(socketId)=>{
 io.on("connection",(socket)=>{
     //Handle all socket server actions
     socket.on("join_request",({username,roomId})=>{
-      // console.log("Socket joining request received ",username,roomId);
-      // socket ko yeh users ke list bhejna padega aur join accepted message bhi
-
-
       const isUsernameExists=getUsersinRoom(roomId).filter(u=>u.username==username);
-      if(isUsernameExists.length>0) {io.to(socket.id).emit("username_exists");return;}
+      if(isUsernameExists.length>0) {
+        io.to(socket.id).emit("username_exists");
+        return;
+      }
 
       const user={
          username,
@@ -81,25 +81,33 @@ io.on("connection",(socket)=>{
       socket.join(roomId);
       socket.broadcast.to(roomId).emit("user_joined",{user});
       const users=getUsersinRoom(roomId);
-      console.log("sending data now ",users,user)
+      console.log("user joined a room",user);
+      console.log("list of all the users now",users);
       io.to(socket.id).emit("join_accepted",{user,users});//send the data of users and user that just joined
     })
+
+    socket.on("disconnecting", () => {
+		const user = getUserBySocketId(socket.id)
+		if (!user) return
+		
+		const roomId = user.roomId
+		
+		// Notify other users in the room about the disconnection
+		socket.broadcast
+			.to(roomId)
+			.emit("user_disconnected", { user })
+		
+		// FIXED: Remove only the disconnecting user from userSocketmap
+		// Keep all users from other rooms intact
+		userSocketmap = userSocketmap.filter((u) => u.socketId !== socket.id)
+		
+		console.log("User disconnected:", user.username)
+		console.log("Remaining users in room:", getUsersinRoom(roomId))
+		console.log("Total users across all rooms:", userSocketmap.length)
+		
+		socket.leave(roomId)
+	})
     
 })
 
-
-
-
-
-
-
 server.listen(PORT,()=>console.log(`The Server is running on port ${PORT}`))
-
-
-
-
-
-
-
-
-

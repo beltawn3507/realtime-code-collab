@@ -8,7 +8,7 @@ import { usesocketstore } from "./../../store/useSocketstore";
 
 function Form() {
   const location = useLocation();
-  const status = useappstore((state) => state.status); 
+  const status = useappstore((state) => state.status);
   const { currentuser, setcurrentuser, setstatus } = useappstore();
   const socket = usesocketstore((state) => state.socket);
   const initializesocket = usesocketstore((state) => state.initializesocket);
@@ -51,38 +51,37 @@ function Form() {
     const user = { username, roomId };
     if (status == "ATTEMPTING_JOIN") return;
     if (!validateForm()) return;
-    let currentsocket=socket;
-    if (!socket){ 
+    let currentsocket = socket;
+    if (!socket) {
       await initializesocket();
-      currentsocket=usesocketstore.getState().socket;
+      currentsocket = usesocketstore.getState().socket;
     } //now socket will be defined
     setcurrentuser(user);
-    toast.loading("joining room");
     setstatus("ATTEMPTING_JOIN");
-    console.log("join request sent ", currentsocket);
+    // console.log("join request sent ", currentsocket);
     currentsocket?.emit("join_request", user);
   };
 
+  //Due to this useffect whenever someone is trying to join by a link provided 
+  // we will check wether it has gone  through a normal join process or not and if not we will redirect it to this page ie home page
+  // but we will use location.state.roomid to store its roomid and it will automatically fill the form
   useEffect(() => {
-    const isRedirect = sessionStorage.getItem("redirect");
-
-    if (status === "DISCONNECTED" && socket && !socket.connected) {
-      socket.connect();
-      return;
+    if (roomId.length > 0) return;
+    if (location.state?.roomId) {
+      setRoomId(location.state.roomId);
+      if (username.length === 0) {
+        toast.success("Enter your username");
+      }
     }
+  }, [setRoomId,roomId,location.state?.roomId]);
 
-    if (status === "JOINED" && !isRedirect) {
-      sessionStorage.setItem("redirect", "true");
+  useEffect(() => {
+    if (status === "JOINED") {
       navigate(`/editor/${roomId}`, {
-        state: { username: username },
+        state: { username },
       });
-    } else if (status === "JOINED" && isRedirect) {
-      sessionStorage.removeItem("redirect");
-      setstatus("DISCONNECTED");
-      socket?.disconnect();
-      socket?.connect();
     }
-  }, [currentuser, status, socket, navigate, setstatus]);
+  }, [status, navigate, roomId, username]);
 
   return (
     <div className="flex w-full max-w-[500px] flex-col items-center justify-center p-4 sm:w-[500px] sm:p-8">

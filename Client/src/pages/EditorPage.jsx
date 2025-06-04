@@ -7,9 +7,11 @@ import useFullScreen from "../Hooks/useFullScreen";
 import Splitter  from "../components/Splitter.jsx"
 import SideBar from './../components/SideBar/SideBar';
 import WorkSpace from './../components/WorkSpace/WorkSpace';
+import useChatSocketListener from "../components/chats/usechatSocketListener.jsx";
 
 
 const EditorPage = () => {
+  useChatSocketListener();
   useFullScreen();
   const { currentuser, setcurrentuser, setstatus } = useappstore();
   const navigate = useNavigate();
@@ -55,6 +57,7 @@ const EditorPage = () => {
     roomId,
     setcurrentuser
   ]);
+
 
   if(useappstore.getState().status==="CONNECTION_FAILED"){
     //it will return a normal page

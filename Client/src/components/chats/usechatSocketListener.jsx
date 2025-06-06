@@ -3,6 +3,9 @@ import { useEffect } from "react";
 import usechatstore from "../../store/usechatstore.js";
 import { usesocketstore } from "../../store/useSocketstore.js";
 
+
+//its use is to always enable the group chat if socket exists
+// and add new message
 export default function useChatSocketListener() {
   const socket = usesocketstore((state) => state.socket);
   const setnewmessage = usechatstore((state) => state.setnewmessage);
@@ -10,16 +13,13 @@ export default function useChatSocketListener() {
   useEffect(() => {
     if (!socket) return;
 
-    // 1) Create a stable, named handler reference:
     const handleGroupChat = (message) => {
       console.log("new message", message);
       setnewmessage(message);
     };
 
-    // 2) Attach exactly this handler
     socket.on("group-chat", handleGroupChat);
 
-    // 3) Cleanup: remove exactly that same handler
     return () => {
       socket.off("group-chat", handleGroupChat);
     };

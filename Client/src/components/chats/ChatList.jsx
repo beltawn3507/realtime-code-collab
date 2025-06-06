@@ -5,9 +5,23 @@ import usechatstore from "../../store/usechatstore";
 function ChatList() {
   const { currentuser } = useappstore();
   const messages = usechatstore((state) => state.messages);
-  console.log(messages)
+  const scrollRef = useRef(null);
+
+  // Auto-scroll to the bottom when messages change
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div className="flex-grow overflow-auto space-y-3 px-4 py-2">
+    <div
+      ref={scrollRef}
+      className="flex-grow overflow-auto space-y-3 px-4 py-2 
+                 bg-gradient-to-b from-slate-100 via-white to-slate-200 
+                 dark:from-gray-800 dark:via-gray-900 dark:to-gray-950 
+                 transition-colors duration-300"
+    >
       {messages.map((message, index) => {
         const isOwnMessage = message.username === currentuser.username;
 
@@ -20,26 +34,32 @@ function ChatList() {
               className={`max-w-[75%] rounded-2xl px-4 py-2 shadow-md transition-colors duration-200 ${
                 isOwnMessage
                   ? "bg-blue-600 text-white rounded-br-none"
-                  : "bg-gray-200 text-gray-800 rounded-bl-none"
+                  : "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-100 rounded-bl-none"
               }`}
             >
               <div className="mb-1 flex items-center justify-between text-xs">
                 <span
                   className={`font-medium ${
-                    isOwnMessage ? "text-blue-200" : "text-gray-600"
+                    isOwnMessage
+                      ? "text-blue-200"
+                      : "text-gray-600 dark:text-gray-300"
                   }`}
                 >
                   {message.username}
                 </span>
                 <span
                   className={`ml-2 ${
-                    isOwnMessage ? "text-blue-100" : "text-gray-500"
+                    isOwnMessage
+                      ? "text-blue-100"
+                      : "text-gray-500 dark:text-gray-400"
                   }`}
                 >
                   {message.timestamp}
                 </span>
               </div>
-              <p className="break-words text-sm leading-relaxed">{message.message}</p>
+              <p className="break-words text-sm leading-relaxed">
+                {message.message}
+              </p>
             </div>
           </div>
         );
@@ -47,6 +67,5 @@ function ChatList() {
     </div>
   );
 }
-
 
 export default ChatList;

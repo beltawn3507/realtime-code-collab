@@ -31,7 +31,7 @@ export const usesocketstore = create((set, get) => {
     const { setUsers, setcurrentuser, setstatus } = useappstore.getState();
     setUsers(users);
     setcurrentuser(user);
-    console.log("users already joined in the room are",useappstore.getState().users);
+    // console.log("users already joined in the room are",useappstore.getState().users);
     setstatus("JOINED");
 
     if (user.length > 1) {
@@ -46,8 +46,15 @@ export const usesocketstore = create((set, get) => {
     toast.success(`${user.username} left the Room`);
     const { users, setUsers } = useappstore.getState();
     setUsers(users.filter((u) => u.username != user.username));
-    console.log("users in current room after one disconnected",useappstore.getState().users)
+    // console.log("users in current room after one disconnected",useappstore.getState().users)
   };
+
+  const  handleUserJoined=({user})=>{
+    const {users,setUsers}=useappstore.getState();
+    toast.success(`New User Joined ${user.username}`);
+    setUsers([...users,user]);
+    console.log("other user joined now the list of users",useappstore.getState().users)
+  }
 
   //   ------------------------------------------------------------------------------------------------------------------------
   //to do handle drawing request from socket
@@ -70,7 +77,7 @@ export const usesocketstore = create((set, get) => {
          socketserver = io(BACKEND_URL, { reconnectionAttempts: 2 });
 
         socketserver.on("connect", () => {
-          console.log("Socket connected");
+          // console.log("Socket connected");
           set({ socket: socketserver });
 
           // Register listeners
@@ -79,6 +86,7 @@ export const usesocketstore = create((set, get) => {
           socketserver.on("username_exists", handleUsernameExists);
           socketserver.on("join_accepted", handleJoinAccepted);
           socketserver.on("user_disconnected", handleUserDisconnect);
+          socketserver.on("user_joined",handleUserJoined);
 
           resolve(socketserver);
         });

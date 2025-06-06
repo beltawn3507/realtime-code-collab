@@ -39,7 +39,7 @@ const EditorPage = () => {
       if (!currentsocket) {
         await initializesocket();
         currentsocket = usesocketstore.getState().socket;
-        console.log("socket details", currentsocket);
+        // console.log("socket details", currentsocket);
       }
       
       if (currentsocket) {

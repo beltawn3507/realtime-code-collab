@@ -47,6 +47,7 @@ function Form() {
   // if scoket is nott initalized it will initialize it first
   // it will also set the zustand currentuser to
   const handleSubmit = async (e) => {
+    console.log("joined button pressed")
     e.preventDefault();
     const user = { username, roomId };
     if (status == "ATTEMPTING_JOIN") return;
@@ -58,7 +59,7 @@ function Form() {
     } //now socket will be defined
     setcurrentuser(user);
     setstatus("ATTEMPTING_JOIN");
-    // console.log("join request sent ", currentsocket);
+    console.log("join request sent ", currentsocket);
     currentsocket?.emit("join_request", user);
   };
 

@@ -35,7 +35,7 @@ function AiHelpView() {
   };
 
   return (
-    <div className="flex max-h-full min-h-[400px] w-full flex-col gap-4 p-6 bg-[#2d2a55] text-[#f8f8f2]">
+    <div className="flex max-h-full min-h-[400px] h-full w-full flex-col gap-4 p-6 bg-[#2d2a55] text-[#f8f8f2]">
       <h1 className="text-3xl font-bold text-[#ff79c6]">ByteBot</h1>
 
       <textarea

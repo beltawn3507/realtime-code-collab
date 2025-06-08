@@ -1,0 +1,98 @@
+import React, { useCallback, useEffect } from 'react'
+import {Tldraw,useEditor,getSnapshot,loadSnapshot} from "tldraw"
+import useWindowDimensions from './../../Hooks/useWindowDimensions';
+import useappstore from '../../store/appstore';
+import { usesocketstore } from './../../store/useSocketstore';
+import 'tldraw/tldraw.css'
+
+
+
+function DrawingEditor() {
+  const {isMobile}=useWindowDimensions()
+  const room = useappstore.getState().currentuser.roomId;
+  // console.log("DrawingEditor render", { isMobile })
+ return (
+  //     Tldraw component  rendered here 
+  // https://tldraw.dev/examples/snapshots  documentation
+        <Tldraw
+            // survives a reload
+            // persistenceKey={room}
+            inferDarkMode
+            forceMobile={isMobile}
+            defaultName="Editor"
+            className="z-0"
+        >
+            <ReachEditor />
+        </Tldraw>
+    )
+}
+
+function ReachEditor(){
+  const editor=useEditor();
+  const {setDrawingdata}=useappstore();
+  const drawingdata=useappstore((state)=>state.drawingdata)
+  const {socket} = usesocketstore();
+
+  const handleChangeEvent=useCallback(
+    (change)=>{
+      const snapshot=change.changes
+      const data=getSnapshot(editor.store)
+      setDrawingdata(data);
+      socket.emit("drawing_update", { snapshot }) //will send the snapshot to server which will send the snapshot to all other client connected to the room
+    },[editor.store, setDrawingdata, socket]
+  )
+  
+
+  //drawing updates from other client
+    const handleRemoteDrawing = useCallback(
+        ({ snapshot }) => {
+            editor.store.mergeRemoteChanges(() => {
+                const { added, updated, removed } = snapshot
+
+                for (const record of Object.values(added)) {
+                    editor.store.put([record])
+                }
+                for (const [, to] of Object.values(updated)) {
+                    editor.store.put([to])
+                }
+                for (const record of Object.values(removed)) {
+                    editor.store.remove([record.id])
+                }
+            })
+            const data=getSnapshot(editor.store)
+            setDrawingdata(data)
+        },
+        [editor.store, setDrawingdata],
+    )
+
+   useEffect(() => {
+        // Load the drawing data from the context
+        if (drawingdata && Object.keys(drawingdata).length > 0) {
+            loadSnapshot(editor.store,drawingdata);
+        }
+    }, [drawingdata,editor.store])
+
+    useEffect(() => {
+        const cleanupFunction = editor.store.listen(handleChangeEvent, {
+            source: "user",
+            scope: "document",
+        })
+        //keep socket listener on for drawing update
+        socket.on("drawing_update", handleRemoteDrawing)
+
+        // Cleanup
+        return () => {
+            cleanupFunction()
+            socket.off("drawing_update")
+        }
+    }, [
+        drawingdata,
+        editor.store,
+        handleChangeEvent,
+        handleRemoteDrawing,
+        socket,
+    ])
+    return null;
+}
+
+export default DrawingEditor

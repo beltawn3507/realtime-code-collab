@@ -41,7 +41,7 @@ function UserView() {
   };
 
   return (
-  <div className="flex flex-col p-6 bg-zinc-900 text-white rounded-2xl shadow-md max-w-md mx-auto">
+  <div className="flex flex-col p-6 bg-zinc-900 text-white rounded-2xl shadow-md max-w-md mx-auto h-full">
     <h1 className="text-2xl font-semibold text-center mb-4 border-b border-zinc-700 pb-2">Users</h1>
     
     {/* List of connected users */}

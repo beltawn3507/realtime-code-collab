@@ -3,13 +3,12 @@ import { io } from "socket.io-client";
 import { toast } from "react-hot-toast";
 
 import useappstore from "./appstore.js";
+import { useCallback } from "react";
 
 const BACKEND_URL = "http://localhost:3000";
 
 export const usesocketstore = create((set, get) => {
   let socketserver = null;
-  //a lot of functions to be added in this
-
   const handleError = (err) => {
     console.log("socket connection error", err);
     useappstore.getState().setstatus("CONNECTION_FAILED");
@@ -31,7 +30,6 @@ export const usesocketstore = create((set, get) => {
     const { setUsers, setcurrentuser, setstatus } = useappstore.getState();
     setUsers(users);
     setcurrentuser(user);
-    // console.log("users already joined in the room are",useappstore.getState().users);
     setstatus("JOINED");
 
     if (user.length > 1) {
@@ -46,35 +44,41 @@ export const usesocketstore = create((set, get) => {
     toast.success(`${user.username} left the Room`);
     const { users, setUsers } = useappstore.getState();
     setUsers(users.filter((u) => u.username != user.username));
-    // console.log("users in current room after one disconnected",useappstore.getState().users)
   };
 
-  const  handleUserJoined=({user})=>{
-    const {users,setUsers}=useappstore.getState();
+  const handleUserJoined = ({ user }) => {
+    const { users, setUsers } = useappstore.getState();
     toast.success(`New User Joined ${user.username}`);
-    setUsers([...users,user]);
-    console.log("other user joined now the list of users",useappstore.getState().users)
-  }
+    setUsers([...users, user]);
+    // console.log(
+    //   "other user joined now the list of users",
+    //   useappstore.getState().users
+    // );
+  };
 
-  //   ------------------------------------------------------------------------------------------------------------------------
-  //to do handle drawing request from socket
-  // -----------------------------------------------------------------------------------------------------------------------------
-  //   const handleRequestDrawing=()=>{
-  //   }
-  //   const handleDrawingSync=()=>{
-  //   }
+  
+  const handleRequestDrawing = ({socketId}) => {
+    console.log("initiated sync draw from client")
+    const drawingdata = useappstore.getState().drawingdata
+      get().socket.emit("sync_drawing", { socketId, drawingdata });
+  };
+
+  //we will get a remote drawing data from other clients and it will store as data
+  //it will consisits snapshots of tldraw editor
+  const handleDrawingSync = ({ drawingdata }) => {
+    useappstore.getState().setDrawingdata(drawingdata);
+  };
 
   return {
-    socket: null,//defines a socket state 
+    socket: null, //defines a socket state
 
-    
     // this function helps to create a socket and set the socket in the store we can do a lot more event listening with this
     initializesocket: () => {
       // console.log("intialise socket initiated")
       return new Promise((resolve, reject) => {
         if (get().socket) return resolve(get().socket); // already initialized
 
-         socketserver = io(BACKEND_URL, { reconnectionAttempts: 2 });
+        socketserver = io(BACKEND_URL, { reconnectionAttempts: 2 });
 
         socketserver.on("connect", () => {
           // console.log("Socket connected");
@@ -86,7 +90,9 @@ export const usesocketstore = create((set, get) => {
           socketserver.on("username_exists", handleUsernameExists);
           socketserver.on("join_accepted", handleJoinAccepted);
           socketserver.on("user_disconnected", handleUserDisconnect);
-          socketserver.on("user_joined",handleUserJoined);
+          socketserver.on("user_joined", handleUserJoined);
+          socketserver.on("request_drawing", handleRequestDrawing);
+          socketserver.on("sync_drawing", handleDrawingSync);
 
           resolve(socketserver);
         });

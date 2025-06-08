@@ -7,7 +7,7 @@ const ChatView = () => {
   // useChatSocketListener();
 
   return (
-    <div className="flex h-screen w-full flex-col p-4 gap-2">
+    <div className="flex h-full w-full flex-col p-4 gap-2">
       <h1 className="text-3xl font-bold text-[#0a87f4]">
         Group Chat
       </h1>

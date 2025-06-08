@@ -100,11 +100,37 @@ io.on("connection", (socket) => {
    //  console.log("Total users across all rooms:", userSocketmap.length);
     socket.leave(roomId);
   });
-
+  //group chat feature
   socket.on("group-chat",({message,roomId})=>{
    // console.log(message,roomId);
    socket.broadcast.to(roomId).emit("group-chat",message);
   })
+
+  
+  socket.on("drawing_update",({snapshot})=>{
+    const roomId=getRoomid(socket.id);
+    if(!roomId) return;
+    socket.broadcast.to(roomId).emit("drawing_update",{snapshot});
+  })
+
+
+  //sync drawing = 
+  socket.on("sync_drawing",({socketId,drawingdata})=>{
+    console.log("drawing synced")
+    socket.broadcast.to(socketId).emit("sync_drawing",{drawingdata})
+  })
+
+  //request drawing
+  // socket id and drawing data 
+  socket.on("request_drawing", () => {
+		const roomId = getRoomid(socket.id);
+		if (!roomId) return
+    // console.log("request_drawing send to client");
+		socket.broadcast
+			.to(roomId)
+			.emit("request_drawing", { socketId: socket.id })
+	})
+
 });
 
 server.listen(PORT, () => console.log(`The Server is running on port ${PORT}`));

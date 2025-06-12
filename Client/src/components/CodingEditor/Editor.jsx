@@ -8,6 +8,7 @@ import { hyperLink } from "@uiw/codemirror-extensions-hyper-link";
 import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import usesettingstore from "../../store/settingstore";
 
 
 // todo
@@ -17,9 +18,11 @@ import toast from "react-hot-toast";
 
 
 function Editor() {
+  const fontSize = usesettingstore((state) => state.fontSize);
+  const language = usesettingstore((state) => state.language);
+  const theme = usesettingstore((state) => state.theme);
   const { users, currentuser } = useappstore();
   const { setactiveFile } = usefilestore();
-  const language = "javascript";
   const activeFile = usefilestore((state) => state.activeFile);
   const { socket } = usesocketstore();
   const [timeOut, setTimeOut] = useState(setTimeout(() => {}, 0));
@@ -56,18 +59,18 @@ function Editor() {
     }
 
     setExtensions(extensions);
-  }, []);
+  }, [language]);
 
   return (
     <CodeMirror
-      theme={editorThemes["Sublime"]}
+      theme={editorThemes[theme]}
       value={activeFile?.content}
       extensions={extensions}
       onChange={handleChange}
       minHeight="100%"
       maxWidth="100vw"
       style={{
-        fontSize: 14 + "px",
+        fontSize: fontSize + "px",
         height: "100vh",
         position: "relative",
       }}

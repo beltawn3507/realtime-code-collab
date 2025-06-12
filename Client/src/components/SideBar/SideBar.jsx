@@ -55,6 +55,7 @@ function SideBar() {
         <SideBarButton viewName="CHAT" icon={viewIcons["CHAT"]} />
         <SideBarButton viewName="ByteBot" icon={viewIcons["ByteBot"]} />
         <SideBarButton viewName="Users" icon={viewIcons["USERS"]} />
+        <SideBarButton viewName="Settings" icon={viewIcons["SETTINGS"]} />
 
 
         <div className="flex h-fit items-center justify-center">

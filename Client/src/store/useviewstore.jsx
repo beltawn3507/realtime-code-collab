@@ -8,6 +8,7 @@ import FIleView from "../components/SideBar/SideBarViews/FIleView";
 import ChatView from "../components/SideBar/SideBarViews/ChatView";
 import AiHelpView from "../components/AiHelp/AiHelp";
 import UserView from "../components/SideBar/SideBarViews/UserView";
+import SettingsView from "../components/SideBar/SideBarViews/SettingsView";
 
 const isMobileInit = typeof window !== "undefined" && window.innerWidth <= 768;
 
@@ -20,14 +21,16 @@ export const useviewstore = create((set, get) => ({
     FILE: <FIleView />,
     CHAT:<ChatView/>,
     ByteBot:<AiHelpView/>,
-    Users:<UserView/>
+    Users:<UserView/>,
+    Settings:<SettingsView/>
   },
   //consists of different icons of different view shown in didebar
   viewIcons: {
     FILE: <LuFiles size={28} />,
     CHAT: <PiChats size={30}/>,
     ByteBot:<LuSparkles size={32}/>,
-    USERS:<PiUsers size={32}/>
+    USERS:<PiUsers size={32}/>,
+    SETTINGS:<IoSettingsOutline size={32} />
   },
 
   setActiveView: (view) => set({ activeView: view }),

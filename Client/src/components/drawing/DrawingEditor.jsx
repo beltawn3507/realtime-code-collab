@@ -11,19 +11,24 @@ function DrawingEditor() {
   const {isMobile}=useWindowDimensions()
   const room = useappstore.getState().currentuser.roomId;
   // console.log("DrawingEditor render", { isMobile })
+
+ 
+
+
  return (
-  //     Tldraw component  rendered here 
-  // https://tldraw.dev/examples/snapshots  documentation
+       <div tabIndex={0} style={{ height: '100%', width: '100%' }}>
         <Tldraw
             // survives a reload
-            // persistenceKey={room}
+            persistenceKey={room}
             inferDarkMode
             forceMobile={isMobile}
             defaultName="Editor"
             className="z-0"
+            // overrides={noShortcuts}
         >
             <ReachEditor />
         </Tldraw>
+        </div>
     )
 }
 
@@ -70,7 +75,7 @@ function ReachEditor(){
         if (drawingdata && Object.keys(drawingdata).length > 0) {
             loadSnapshot(editor.store,drawingdata);
         }
-    }, [drawingdata,editor.store])
+    }, [])
 
     useEffect(() => {
         const cleanupFunction = editor.store.listen(handleChangeEvent, {
@@ -86,13 +91,13 @@ function ReachEditor(){
             socket.off("drawing_update")
         }
     }, [
-        drawingdata,
-        editor.store,
         handleChangeEvent,
         handleRemoteDrawing,
         socket,
     ])
     return null;
 }
+
+
 
 export default DrawingEditor

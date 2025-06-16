@@ -9,26 +9,28 @@ import ChatView from "../components/SideBar/SideBarViews/ChatView";
 import AiHelpView from "../components/AiHelp/AiHelp";
 import UserView from "../components/SideBar/SideBarViews/UserView";
 import SettingsView from "../components/SideBar/SideBarViews/SettingsView";
+import RunView from "../components/SideBar/SideBarViews/RunView";
 
 const isMobileInit = typeof window !== "undefined" && window.innerWidth <= 768;
 
 export const useviewstore = create((set, get) => ({
-  activeView: "FILE",
-  isSideBarOpen: !isMobileInit,
+  activeView: "RUN",
+  isSideBarOpen: false,
 
   //consists components of different view shown in sidebar
   viewComponents: {
-    FILE: <FIleView />,
     CHAT:<ChatView/>,
     ByteBot:<AiHelpView/>,
+    RUN:<RunView/>,
     Users:<UserView/>,
     Settings:<SettingsView/>
   },
   //consists of different icons of different view shown in didebar
   viewIcons: {
-    FILE: <LuFiles size={28} />,
+    
     CHAT: <PiChats size={30}/>,
     ByteBot:<LuSparkles size={32}/>,
+    RUN:<PiPlay size={32}/>,
     USERS:<PiUsers size={32}/>,
     SETTINGS:<IoSettingsOutline size={32} />
   },

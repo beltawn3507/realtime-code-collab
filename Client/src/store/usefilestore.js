@@ -26,6 +26,26 @@ const usefilestore = create((set, get) => {
     setactiveFile: (file) => {
       set({ activeFile: file })
     },
+
+    toggledirectory:()=>{
+
+    },
+
+    collapsedirectory:()=>{
+
+    },
+
+    createDirectory:()=>{
+
+    },
+
+    updateDirectory:()=>{
+
+    },
+
+    
+
+
   }
 })
 

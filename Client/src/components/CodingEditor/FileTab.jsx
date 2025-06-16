@@ -2,7 +2,7 @@ import React from 'react'
 
 function FileTab() {
   return (
-    <div>FileTab</div>
+    <div>Feature Coming Soon</div>
   )
 }
 

@@ -20,7 +20,6 @@ const EditorPage = () => {
   const  roomId  = useParams().roomId;
   const location = useLocation();
 
-  //now we use a useeffect that will check wether i have came with a proper login or not
   useEffect(() => {
   if (currentuser.username.length > 0) return;
   const username = location.state?.username;
@@ -39,7 +38,6 @@ const EditorPage = () => {
       if (!currentsocket) {
         await initializesocket();
         currentsocket = usesocketstore.getState().socket;
-        // console.log("socket details", currentsocket);
       }
       
       if (currentsocket) {

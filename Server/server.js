@@ -9,7 +9,7 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
-app.use(cors);
+app.use(cors());
 
 const server = http.createServer(app);
 
@@ -133,4 +133,8 @@ io.on("connection", (socket) => {
 
 });
 
-server.listen(PORT, () => console.log(`The Server is running on port ${PORT}`));
+console.log("Using port:", PORT);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+

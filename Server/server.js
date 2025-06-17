@@ -92,12 +92,8 @@ io.on("connection", (socket) => {
     const user = getUserBySocketId(socket.id);
     if (!user) return;
     const roomId = user.roomId;
-    // Notify other users in the room about the disconnection
     socket.broadcast.to(roomId).emit("user_disconnected", { user });
     userSocketmap = userSocketmap.filter((u) => u.socketId !== socket.id);
-   //  console.log("User disconnected:", user.username);
-   //  console.log("Remaining users in room:", getUsersinRoom(roomId));
-   //  console.log("Total users across all rooms:", userSocketmap.length);
     socket.leave(roomId);
   });
   //group chat feature

@@ -21,6 +21,10 @@ const io = new Server(server, {
   pingTimeout: 60000,
 });
 
+app.get('/', (req, res) => {
+  res.send('Hello World')
+})
+
 //this will contain object with this
 // username
 // roomId

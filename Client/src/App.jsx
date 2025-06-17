@@ -2,7 +2,7 @@ import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import EditorPage from "./pages/EditorPage";
-import Toast from "./components/toast/Toast.jsx";
+import Toast from "./components/Toast/Toast.jsx";
 
 function App() {
   return (

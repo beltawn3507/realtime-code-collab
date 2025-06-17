@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import useappstore from "./appstore.js";
 import { useCallback } from "react";
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://realtime-code-collab-uvx5.onrender.com";
 
 export const usesocketstore = create((set, get) => {
   let socketserver = null;

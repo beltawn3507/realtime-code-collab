@@ -14,7 +14,7 @@ export default function useChatSocketListener() {
     if (!socket) return;
 
     const handleGroupChat = (message) => {
-      console.log("new message", message);
+      // console.log("new message", message);
       setnewmessage(message);
     };
 

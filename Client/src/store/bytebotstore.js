@@ -17,7 +17,7 @@ const usebytebot = create((set, get) => ({
       // console.log("generate code triggered")
       toast.loading("Generating Code..");
       get().setisRunning(true);
-      console.log("model being used ",get().model)
+      // console.log("model being used ",get().model)
       const response =await pollinationinstance.post("/", {
         messages: [
           {
@@ -41,12 +41,12 @@ const usebytebot = create((set, get) => ({
         const code = response.data;
         if (code) get().setoutput(code);
       }else{
-        console.log("code failed to get any response")
+        // console.log("code failed to get any response")
       }
       get().setisRunning(false);
       toast.dismiss();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       get().setisRunning(false);
       toast.dismiss();
       toast.error("Failed to generate the code");

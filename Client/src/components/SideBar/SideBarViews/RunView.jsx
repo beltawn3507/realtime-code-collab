@@ -11,7 +11,7 @@ const RunView = () => {
 
   useEffect(() => {
     // console.log(selectedLanguage);
-    console.log(output);
+    // console.log(output);
   }, [output]);
 
   const { setselectedLanguage, setinput, runCode } = userunstore();

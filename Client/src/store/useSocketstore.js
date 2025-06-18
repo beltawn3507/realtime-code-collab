@@ -18,7 +18,7 @@ export const usesocketstore = create((set, get) => {
 
   //funciton to handle username exists
   const handleUsernameExists = () => {
-    console.log("Username already exists try another");
+    // console.log("Username already exists try another");
     toast.dismiss();
     useappstore.getState().setstatus("INITIAL");
     toast.error("Username already exists in the room. Choose another.");

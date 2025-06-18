@@ -34,7 +34,7 @@ function ChatInput() {
     };
     sendnewmessage({ message:newmessage, roomId });
     setMessage("");
-    console.log(usechatstore.getState().messages);
+    // console.log(usechatstore.getState().messages);
   };
 
   return (

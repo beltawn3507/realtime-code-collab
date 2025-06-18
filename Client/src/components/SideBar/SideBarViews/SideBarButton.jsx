@@ -17,7 +17,7 @@ const SideBarButton=({viewName,icon})=>{
     const handleViewClick=(viewName)=>{
      if(viewName==useviewstore.getState().activeView){
         setIsSidebarOpen(!useviewstore.getState().isSideBarOpen)
-        console.log("sidebarstate opposite",useviewstore.getState().isSideBarOpen);
+        // console.log("sidebarstate opposite",useviewstore.getState().isSideBarOpen);
      }else{
         setActiveView(viewName);
         setIsSidebarOpen(true);

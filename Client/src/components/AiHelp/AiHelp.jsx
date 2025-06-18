@@ -31,7 +31,7 @@ function AiHelpView() {
     setinput(prompt);
     setmodelname(model);
     generateCode();
-    console.log(usebytebot.getState().output);
+    // console.log(usebytebot.getState().output);
   };
 
   return (
@@ -74,7 +74,7 @@ function AiHelpView() {
             code({ inline, className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || "");
               const language = match ? match[1] : "javascript"; // it finds if any language is there
-              console.log(language);
+              // console.log(language);
               return !inline ? (
                 <SyntaxHighlighter
                   style={synthwave84}

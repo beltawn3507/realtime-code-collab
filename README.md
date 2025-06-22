@@ -1,9 +1,13 @@
 # Real-time Collaborative Code Editor
 
-A powerful, full-stack collaborative code editor designed for developers to write, draw, chat, and brainstorm together — all in real-time. Whether you're pair programming, running a coding interview, or hosting a team hackathon, DevSync brings the VS Code-like experience to the browser.
+A powerful, full-stack collaborative code editor designed for developers to write, draw, chat, and brainstorm together — all in real-time. Whether you're pair programming, running a coding interview, or hosting a team hackathon.
 
 ---
+Make Sure That the Server is running first as it goes to idle mode.
+[Server](https://realtime-code-collab-uvx5.onrender.com)
 
+
+------
 ## 🚀 Features
 
 ### ✍️ Code Collaboration

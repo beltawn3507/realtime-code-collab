@@ -16,7 +16,7 @@ const usechatstore = create((set, get) => ({
     const messages = get().messages;
     set({ messages: [...messages, message] });
     const newmessages=get().messages;
-    console.log(newmessages);
+    // console.log(newmessages);
   },
 
   sendnewmessage: ({message,roomId}) => {

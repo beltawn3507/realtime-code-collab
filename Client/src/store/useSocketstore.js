@@ -5,7 +5,8 @@ import { toast } from "react-hot-toast";
 import useappstore from "./appstore.js";
 import { useCallback } from "react";
 
-const BACKEND_URL = "https://realtime-code-collab-uvx5.onrender.com";
+// const BACKEND_URL = "https://realtime-code-collab-uvx5.onrender.com";
+const BACKEND_URL="http://localhost:3000"
 
 export const usesocketstore = create((set, get) => {
   let socketserver = null;
@@ -18,7 +19,6 @@ export const usesocketstore = create((set, get) => {
 
   //funciton to handle username exists
   const handleUsernameExists = () => {
-    // console.log("Username already exists try another");
     toast.dismiss();
     useappstore.getState().setstatus("INITIAL");
     toast.error("Username already exists in the room. Choose another.");
@@ -32,8 +32,10 @@ export const usesocketstore = create((set, get) => {
     setcurrentuser(user);
     setstatus("JOINED");
 
-    if (user.length > 1) {
+    if (users.length > 1) {
       toast.loading("Syncing Data . Please Wait");
+      get().socket.emit("req_code_sync");
+      toast.dismiss();
     }
   };
 
@@ -50,15 +52,10 @@ export const usesocketstore = create((set, get) => {
     const { users, setUsers } = useappstore.getState();
     toast.success(`New User Joined ${user.username}`);
     setUsers([...users, user]);
-    // console.log(
-    //   "other user joined now the list of users",
-    //   useappstore.getState().users
-    // );
   };
 
   
   const handleRequestDrawing = ({socketId}) => {
-    console.log("initiated sync draw from client")
     const drawingdata = useappstore.getState().drawingdata
       get().socket.emit("sync_drawing", { socketId, drawingdata });
   };
@@ -74,9 +71,8 @@ export const usesocketstore = create((set, get) => {
 
     // this function helps to create a socket and set the socket in the store we can do a lot more event listening with this
     initializesocket: () => {
-      // console.log("intialise socket initiated")
       return new Promise((resolve, reject) => {
-        if (get().socket) return resolve(get().socket); // already initialized
+        if (get().socket) return resolve(get().socket); 
 
         socketserver = io(BACKEND_URL, { reconnectionAttempts: 2 });
 

@@ -6,6 +6,9 @@ const initalCode=
     }
       
     sayHi();
+    // You can compile this Code
+    // Use WhiteBoard Feature
+    // Use AI Models for code Generation
 `
 export const initialFileStructure={
     name:"root",

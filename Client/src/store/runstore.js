@@ -64,7 +64,7 @@ const userunstore = create((set, get) => {
                 get().setoutput(response.data.run.stdout)
             }
 
-            console.log(response)
+            // console.log(response)
             get().setisRunning(false);
             toast.dismiss();
         } catch (error) {

@@ -30,7 +30,6 @@ const io = new Server(server, {
   pingTimeout: 60000,
 });
 
-// Health check endpoint for Render
 app.get('/', (req, res) => {
   res.status(200).json({ 
     status: 'Server is running!', 
@@ -39,12 +38,10 @@ app.get('/', (req, res) => {
   });
 });
 
-// API health check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', service: 'Socket.IO Server' });
 });
 
-// Get server info
 app.get('/api/info', (req, res) => {
   res.json({
     message: 'Real-time Code Collaboration Server',
@@ -136,7 +133,7 @@ io.on("connection", (socket) => {
 
   //sync drawing
   socket.on("sync_drawing", ({ socketId, drawingdata }) => {
-    console.log("drawing synced");
+    // console.log("drawing synced");
     socket.broadcast.to(socketId).emit("sync_drawing", { drawingdata });
   });
 
@@ -146,6 +143,21 @@ io.on("connection", (socket) => {
     if (!roomId) return;
     socket.broadcast.to(roomId).emit("request_drawing", { socketId: socket.id });
   });
+
+  socket.on("file_sync",(code)=>{
+    const roomId=getRoomid(socket.id);
+    if(!roomId) return;
+    // console.log(code);
+    socket.broadcast.to(roomId).emit("file_sync",code);
+  });
+
+  socket.on("req_code_sync",()=>{
+    const roomId=getRoomid(socket.id);
+    if(!roomId) return;
+    socket.broadcast.to(roomId).emit("req_code_sync");
+  })
+
+
 });
 
 // Start server with proper error handling

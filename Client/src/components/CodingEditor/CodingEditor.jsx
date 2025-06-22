@@ -16,10 +16,6 @@ function CodingEditor() {
   return (
     <main
       className={"flex w-full flex-col overflow-x-auto md:h-screen"}
-      // , {
-      //   // "h-[calc(100vh-50px)]": !minHeightReached,
-      //   // "h-full": minHeightReached,
-      // })}
     >
       <FileTab />
       <Editor />

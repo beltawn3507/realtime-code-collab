@@ -24,8 +24,11 @@ function Editor() {
   const { users, currentuser } = useappstore();
   const { setactiveFile } = usefilestore();
   const activeFile = usefilestore((state) => state.activeFile);
-  const { socket } = usesocketstore();
+  const  socket  = usesocketstore((state)=>state.socket);
+  const setupSocketListeners=usefilestore((state)=>state.setSocketListeners)
+  
   const [timeOut, setTimeOut] = useState(setTimeout(() => {}, 0));
+
   const filteredUsers = useMemo(
     () => users.filter((u) => u.username !== currentuser.username),
     [users, currentuser]
@@ -33,15 +36,13 @@ function Editor() {
   const [extensions, setExtensions] = useState([]);
 
   //function oncodechange
-  const handleChange = (code, view) => {
-    // console.log(code);
+  const handleChange = (code) => {
     if (!activeFile) return;
     const file = { activeFile, content: code };
+    // console.log(code);
     setactiveFile(file);
-
-    //socket logic to send data of the activefile code
-
-    //scoket logic to send typing start and end
+    // console.log("socket file sync initiated",socket);
+    socket.emit("file_sync",code);
   };
 
   useEffect(() => {
@@ -60,6 +61,12 @@ function Editor() {
 
     setExtensions(extensions);
   }, [language]);
+
+  useEffect(() => {
+    if(!socket) return ;
+    const cleanup = setupSocketListeners(socket)
+    return cleanup // Automatically cleans up listeners
+  }, [socket, setupSocketListeners])
 
   return (
     <CodeMirror

@@ -10,7 +10,6 @@ import 'tldraw/tldraw.css'
 function DrawingEditor() {
   const {isMobile}=useWindowDimensions()
   const room = useappstore.getState().currentuser.roomId;
-  // console.log("DrawingEditor render", { isMobile })
 
  
 
@@ -43,7 +42,7 @@ function ReachEditor(){
       const snapshot=change.changes
       const data=getSnapshot(editor.store)
       setDrawingdata(data);
-      socket.emit("drawing_update", { snapshot }) //will send the snapshot to server which will send the snapshot to all other client connected to the room
+      socket.emit("drawing_update", { snapshot }) 
     },[editor.store, setDrawingdata, socket]
   )
   

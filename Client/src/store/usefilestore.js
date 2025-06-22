@@ -1,9 +1,10 @@
 import { doesfileexist, findparentdirectory, getfilebyid, initialFileStructure } from "../utils/file.js"
 import { create } from "zustand"
 
+
 const usefilestore = create((set, get) => {
   const initialOpenFiles = initialFileStructure.children ? structuredClone(initialFileStructure.children) : []
-  const initialActiveFile = initialOpenFiles.length > 0 ? initialOpenFiles[0] : null
+  const initialActiveFile = initialOpenFiles.length > 0 ? initialOpenFiles[0] : null;
 
   return {
     fileStructure: initialFileStructure,
@@ -14,37 +15,40 @@ const usefilestore = create((set, get) => {
       const initialOpenFiles = fileStructure.children ? structuredClone(fileStructure.children) : []
       set({
         fileStructure,
-        openFiles: initialOpenFiles,
+        // openFiles: initialOpenFiles,
         activeFile: initialOpenFiles[0] || null
       })
     },
-
-    setOpenFiles: (openFiles) => {
-      set({ openFiles })
-    },
+    
+    // TODO Multiple Coding Workspace
+    // setOpenFiles: (openFiles) => {
+    //   set({ openFiles })
+    // },
 
     setactiveFile: (file) => {
       set({ activeFile: file })
     },
 
-    toggledirectory:()=>{
-
+    handleFileUpdate:(code)=>{
+      const activefile=get().activeFile;
+      const updatefile={...activefile,content:code}
+      get().setactiveFile(updatefile)
     },
 
-    collapsedirectory:()=>{
-
+    handlereqCodeSync:(socket)=>{
+      const activefile=get().activeFile;
+      const code=activefile.content;
+      socket.emit("file_sync",code);
     },
 
-    createDirectory:()=>{
+    setSocketListeners:(socket)=>{
+      socket.on("file_sync",get().handleFileUpdate);
+      socket.on("req_code_sync",()=>get().handlereqCodeSync(socket))
 
-    },
-
-    updateDirectory:()=>{
-
-    },
-
-    
-
+      return()=>{
+        socket.off("file_sync");
+      }
+    }
 
   }
 })

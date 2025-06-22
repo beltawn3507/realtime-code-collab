@@ -17,7 +17,7 @@
   "scripts": {
     "fullstack": "concurrently \"npm run frontend\" \"npm run backend\"",
     "frontend": "cd client && npm run dev",
-    "backend": "nodemon server/src/server.js"
+    "backend": "nodemon server/server.js"
   },
   "dependencies": {
     "concurrently": "^9.1.2",

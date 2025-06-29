@@ -23,10 +23,6 @@ Make Sure That the Server is running first as it goes to idle mode.
 - Live chat panel for seamless communication
 - Auto-scrolling, timestamps, and username support
 
-### 🗂️ Advanced File Explorer
-- Custom-built file system architecture
-- Multi-file support with active tab view
-- Supports nested folders and state persistence
 ---
 
 ## 🛠️ Tech Stack

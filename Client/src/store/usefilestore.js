@@ -1,32 +1,70 @@
-import { doesfileexist, findparentdirectory, getfilebyid, initialFileStructure } from "../utils/file.js"
+import { doesfileexist, files } from "../utils/file.js"
 import { create } from "zustand"
+import {v4 as uuidv4 } from "uuid"
 
 
 const usefilestore = create((set, get) => {
-  const initialOpenFiles = initialFileStructure.children ? structuredClone(initialFileStructure.children) : []
-  const initialActiveFile = initialOpenFiles.length > 0 ? initialOpenFiles[0] : null;
+  const initialOpenFiles = files.length>0 ? files : null;
+  const initialActiveFile = files.length>0 ? files[0] : null;
 
   return {
-    fileStructure: initialFileStructure,
+    fileStructure: files,
     openFiles: initialOpenFiles,
     activeFile: initialActiveFile,
 
     setFileStructure: (fileStructure) => {
-      const initialOpenFiles = fileStructure.children ? structuredClone(fileStructure.children) : []
       set({
-        fileStructure,
-        // openFiles: initialOpenFiles,
-        activeFile: initialOpenFiles[0] || null
+        fileStructure
       })
     },
     
-    // TODO Multiple Coding Workspace
-    // setOpenFiles: (openFiles) => {
-    //   set({ openFiles })
-    // },
+    setOpenFiles: (openFiles) => {
+      set({ openFiles })
+    },
 
     setactiveFile: (file) => {
       set({ activeFile: file })
+    },
+
+    
+    openFile:(fileId)=>{
+      const requiredFile = get().fileStructure.find(file=>file.id===fileId);
+      if(!requiredFile) return;
+      const openfilesList = get().openFiles || [];
+      const alreadyOpen=openfilesList.some(file=>file.id===fileId);
+      if(!alreadyOpen){
+        set({openFiles:[...openfilesList,requiredFile]})
+      }
+      set({activeFile:requiredFile});
+    },
+
+    closeFile:(id)=>{
+      const requiredFile=get().fileStructure.find((file)=>file.id===id);
+      if(!requiredFile) return;
+      const openFileList=get().openFiles;
+      const updatedFile=openFileList.filter((file)=>file.id !== id);
+      set({openFiles:updatedFile});
+     
+      if(updatedFile.length > 0){
+        const index=updatedFile.length-1;
+        const lastFile = updatedFile[index];
+        set({activeFile:lastFile});
+      }
+    },
+
+    createFile:(fileName)=>{
+      const id=uuidv4();
+      const newFile={
+        id,
+        name:fileName,
+        content:``
+      }
+      const fileStructure=get().fileStructure;
+      const openFileList=get().openFiles;
+      
+      set({fileStructure:[...fileStructure,newFile]});
+      set({openFiles:[...openFileList,newFile]});
+      set({activeFile:newFile});
     },
 
     handleFileUpdate:(code)=>{

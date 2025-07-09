@@ -6,39 +6,37 @@ const initalCode=
     }
       
     sayHi();
-    // You can compile this Code
-    // Use WhiteBoard Feature
-    // Use AI Models for code Generation
-`
-export const initialFileStructure={
-    name:"root",
-    id:uuidv4(),
-    type:"directory",
-    children:[{
+    // You can work together on code with live updates across all users
+    // Write and run code in multiple programming languages
+    // Sketch diagrams, brainstorm ideas, or plan visually in real time
+    // Use ByteBot for code Generation
+    // Share your unique room link with others to invite them
+     `
+
+
+const initalCodeCPP=
+` #include <iostream> 
+      using namespace std;  
+
+      int main() { 
+        std::cout << "Hello, World!" << std::endl; 
+      return 0; 
+}`
+
+export const files=[{
         id:uuidv4(),
         name:"index.js",
-        type:"file",
         content:initalCode
+    },
+    {
+        id:uuidv4(),
+        name:"tut.cpp",
+        content:initalCodeCPP
     }
-    ]
-}
+];
+    
 
-//recursive function which will return the directory which matches with the provided parent directory
-export const findparentdirectory=(directory,parentdirectoryid)=>{
-    //base case
-   if(directory.id===parentdirectoryid && directory.type==="directory"){
-    return directory;
-   }
 
-   if(directory.type==="directory" && directory.children){
-    //recursively iterate to its child as well
-    for(const children of directory.children){
-        const found=findparentdirectory(children,parentdirectoryid);
-        if(found) return found;
-    }
-   }
-   return null;
-}
 
 //this function will check wether a file with same name already exists or not
 export const doesfileexist=(directory,name)=>{

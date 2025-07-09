@@ -51,7 +51,7 @@ function SideBar() {
           "fixed bottom-0 left-0 z-50 flex h-[50px] w-full gap-4 self-end overflow-hidden border-t border-darkHover bg-dark p-2 md:static md:h-full md:w-[50px] md:min-w-[50px] md:flex-col md:border-r md:border-t-0 md:p-2 md:pt-4"
         }
       >
-        {/* <SideBarButton viewName="FILE" icon={viewIcons["FILE"]} /> */}
+        <SideBarButton viewName="FILE" icon={viewIcons["FILE"]} />
         <SideBarButton viewName="CHAT" icon={viewIcons["CHAT"]} />
         <SideBarButton viewName="ByteBot" icon={viewIcons["ByteBot"]} />
         <SideBarButton viewName="RUN" icon={viewIcons["RUN"]} />

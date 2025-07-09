@@ -26,7 +26,9 @@ function Editor() {
   const activeFile = usefilestore((state) => state.activeFile);
   const  socket  = usesocketstore((state)=>state.socket);
   const setupSocketListeners=usefilestore((state)=>state.setSocketListeners)
-  
+  const fileStructure = usefilestore((state)=>state.fileStructure);
+  const setFileStructure = usefilestore((state)=>state.setFileStructure)
+
   const [timeOut, setTimeOut] = useState(setTimeout(() => {}, 0));
 
   const filteredUsers = useMemo(
@@ -38,7 +40,15 @@ function Editor() {
   //function oncodechange
   const handleChange = (code) => {
     if (!activeFile) return;
-    const file = { activeFile, content: code };
+    const file = { ...activeFile, content: code };
+    const fileId=file.id;
+    
+    
+    const updatedFileStructre=fileStructure.map((currfile)=>{
+      return currfile.id===fileId ? {...currfile,content:code} : currfile;
+    });
+    // console.log(fileStructure)
+    setFileStructure(updatedFileStructre);
     // console.log(code);
     setactiveFile(file);
     // console.log("socket file sync initiated",socket);

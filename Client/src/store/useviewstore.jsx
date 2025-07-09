@@ -3,6 +3,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { LuFiles, LuSparkles } from "react-icons/lu";
 import { PiChats, PiPlay, PiUsers } from "react-icons/pi";
 import { create } from "zustand";
+import { GoFileDirectory } from "react-icons/go";
 import useWindowDimensions from "../Hooks/useWindowDimensions";
 import FIleView from "../components/SideBar/SideBarViews/FIleView";
 import ChatView from "../components/SideBar/SideBarViews/ChatView";
@@ -19,6 +20,7 @@ export const useviewstore = create((set, get) => ({
 
   //consists components of different view shown in sidebar
   viewComponents: {
+    FILE:<FIleView/>,
     CHAT:<ChatView/>,
     ByteBot:<AiHelpView/>,
     RUN:<RunView/>,
@@ -27,7 +29,7 @@ export const useviewstore = create((set, get) => ({
   },
   //consists of different icons of different view shown in didebar
   viewIcons: {
-    
+    FILE:<GoFileDirectory size={30} />,
     CHAT: <PiChats size={30}/>,
     ByteBot:<LuSparkles size={32}/>,
     RUN:<PiPlay size={32}/>,

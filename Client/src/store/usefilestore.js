@@ -10,7 +10,7 @@ const usefilestore = create((set, get) => {
   return {
     fileStructure: files,
     openFiles: initialOpenFiles,
-    activeFile: initialActiveFile,
+    activeFlie: initialActiveFile,
 
     setFileStructure: (fileStructure) => {
       set({
@@ -66,6 +66,34 @@ const usefilestore = create((set, get) => {
       set({openFiles:[...openFileList,newFile]});
       set({activeFile:newFile});
     },
+
+    renameFile:(fileId,newName)=>{
+      const fileStruct = get().fileStructure;
+      const updatedfile = fileStruct.map((file)=>{
+       if(file.id===fileId){
+        return {...file,name:newName}
+       }
+
+       return file;
+      })
+      get().closeFile(fileId);
+      set({fileStructure:updatedfile});
+      get().openFile(fileId);
+    },
+
+    deleteFile:(fileId)=>{
+       const fileStruct=get().fileStructure;
+       const updatedFile=fileStruct.filter((file)=>{
+        return file.id!==fileId
+       });
+       get().closeFile(fileId)
+       set({
+        fileStructure:updatedFile
+       })
+
+    },
+
+
 
     handleFileUpdate:(code)=>{
       const activefile=get().activeFile;

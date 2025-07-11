@@ -10,7 +10,7 @@ const usefilestore = create((set, get) => {
   return {
     fileStructure: files,
     openFiles: initialOpenFiles,
-    activeFlie: initialActiveFile,
+    activeFile: initialActiveFile,
 
     setFileStructure: (fileStructure) => {
       set({

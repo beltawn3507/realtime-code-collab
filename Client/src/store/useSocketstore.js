@@ -5,9 +5,9 @@ import { toast } from "react-hot-toast";
 import useappstore from "./appstore.js";
 import { useCallback } from "react";
 
-const BACKEND_URL = "https://realtime-code-collab-uvx5.onrender.com";
+// const BACKEND_URL = "https://realtime-code-collab-uvx5.onrender.com";
 // for local development
-// const BACKEND_URL="http://localhost:3000"
+const BACKEND_URL="http://localhost:3000"
 
 export const usesocketstore = create((set, get) => {
   let socketserver = null;
@@ -35,7 +35,7 @@ export const usesocketstore = create((set, get) => {
 
     if (users.length > 1) {
       toast.loading("Syncing Data . Please Wait");
-      get().socket.emit("req_code_sync");
+      get().socket.emit("req_file_sync");
       toast.dismiss();
     }
   };
@@ -76,11 +76,11 @@ export const usesocketstore = create((set, get) => {
         if (get().socket) return resolve(get().socket); 
 
         socketserver = io(BACKEND_URL, { reconnectionAttempts: 2 });
-
+        
         socketserver.on("connect", () => {
           // console.log("Socket connected");
           set({ socket: socketserver });
-
+          
           // Register listeners
           socketserver.on("connect_error", handleError);
           socketserver.on("connect_failed", handleError);

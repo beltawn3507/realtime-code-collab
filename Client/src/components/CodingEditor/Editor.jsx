@@ -11,12 +11,6 @@ import toast from "react-hot-toast";
 import usesettingstore from "../../store/settingstore";
 
 
-// todo
-// themes font size and language we have to take from settings context not done
-// on useffect socket logic implementation left
-
-
-
 function Editor() {
   const fontSize = usesettingstore((state) => state.fontSize);
   const language = usesettingstore((state) => state.language);
@@ -49,10 +43,8 @@ function Editor() {
     });
     // console.log(fileStructure)
     setFileStructure(updatedFileStructre);
-    // console.log(code);
     setactiveFile(file);
-    // console.log("socket file sync initiated",socket);
-    socket.emit("file_sync",code);
+    socket.emit("file_sync",updatedFileStructre);
   };
 
   useEffect(() => {
@@ -75,7 +67,7 @@ function Editor() {
   useEffect(() => {
     if(!socket) return ;
     const cleanup = setupSocketListeners(socket)
-    return cleanup // Automatically cleans up listeners
+    return cleanup 
   }, [socket, setupSocketListeners])
 
   return (

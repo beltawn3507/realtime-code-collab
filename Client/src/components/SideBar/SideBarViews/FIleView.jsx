@@ -2,6 +2,7 @@ import React from "react";
 import usefilestore from "../../../store/usefilestore";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import { MdDelete, MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import { usesocketstore } from "../../../store/useSocketstore";
 
 function FileView() {
   const files = usefilestore((state) => state.fileStructure);
@@ -11,6 +12,7 @@ function FileView() {
   const createFile = usefilestore((state) => state.createFile);
   const renameFile = usefilestore((state) => state.renameFile);
   const deleteFile=usefilestore((state)=>state.deleteFile);
+  const socket=usesocketstore((state)=>state.socket);
 
   const handleClick = (file) => {
     openFile(file.id);
@@ -31,11 +33,11 @@ function FileView() {
       alert("Invalid file name!");
       return;
     }
-    renameFile(file.id, newName);
+    renameFile(file.id, newName,socket);
   };
 
   const handleDelete=(file)=>{
-    deleteFile(file.id)
+    deleteFile(file.id,socket);
   }
 
   return (

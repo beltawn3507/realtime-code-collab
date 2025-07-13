@@ -1,9 +1,11 @@
 //this will consist of all the component of the sidebar which will be displayed in the
 import { IoSettingsOutline } from "react-icons/io5";
-import { LuFiles, LuSparkles } from "react-icons/lu";
+import { LuFiles } from "react-icons/lu";
 import { PiChats, PiPlay, PiUsers } from "react-icons/pi";
 import { create } from "zustand";
+import { RiRobot2Fill } from "react-icons/ri";
 import { GoFileDirectory } from "react-icons/go";
+import { IoChatbubblesOutline } from "react-icons/io5";
 import useWindowDimensions from "../Hooks/useWindowDimensions";
 import FIleView from "../components/SideBar/SideBarViews/FIleView";
 import ChatView from "../components/SideBar/SideBarViews/ChatView";
@@ -30,8 +32,8 @@ export const useviewstore = create((set, get) => ({
   //consists of different icons of different view shown in didebar
   viewIcons: {
     FILE:<GoFileDirectory size={30} />,
-    CHAT: <PiChats size={30}/>,
-    ByteBot:<LuSparkles size={32}/>,
+    CHAT: <IoChatbubblesOutline size={30}/>,
+    ByteBot:<RiRobot2Fill size={32}/>,
     RUN:<PiPlay size={32}/>,
     USERS:<PiUsers size={32}/>,
     SETTINGS:<IoSettingsOutline size={32} />

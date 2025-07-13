@@ -144,17 +144,30 @@ io.on("connection", (socket) => {
     socket.broadcast.to(roomId).emit("request_drawing", { socketId: socket.id });
   });
 
-  socket.on("file_sync",(code)=>{
+  socket.on("file_sync",(fileStructure)=>{
+    // console.log("this is the iniial file_sync" , fileStructure)
     const roomId=getRoomid(socket.id);
     if(!roomId) return;
-    // console.log(code);
-    socket.broadcast.to(roomId).emit("file_sync",code);
+    // console.log(fileStructure)
+    socket.broadcast.to(roomId).emit("file_sync",fileStructure);
   });
 
-  socket.on("req_code_sync",()=>{
+  socket.on("req_file_sync",()=>{
     const roomId=getRoomid(socket.id);
     if(!roomId) return;
-    socket.broadcast.to(roomId).emit("req_code_sync");
+    socket.broadcast.to(roomId).emit("req_file_sync");
+  });
+
+  socket.on("rename_file",({fileId,newName})=>{
+    const roomId=getRoomid(socket.id);
+    if(!roomId) return;
+    socket.broadcast.to(roomId).emit("rename_file",{fileId,newName});
+  });
+
+  socket.on("delete_file",(fileId)=>{
+    const roomId=getRoomid(socket.id);
+    if(!roomId) return;
+    socket.broadcast.to(roomId).emit("delete_file",fileId)
   })
 
 

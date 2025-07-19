@@ -164,6 +164,12 @@ io.on("connection", (socket) => {
     socket.broadcast.to(roomId).emit("rename_file",{fileId,newName});
   });
 
+  socket.on("file_created",({fileName,id})=>{
+    const roomId=getRoomid(socket.id);
+    if(!roomId) return;
+    socket.broadcast.to(roomId).emit("file_created",{fileName,id});
+  })
+
   socket.on("delete_file",(fileId)=>{
     const roomId=getRoomid(socket.id);
     if(!roomId) return;

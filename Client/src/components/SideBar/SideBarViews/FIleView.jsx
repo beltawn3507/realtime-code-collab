@@ -24,7 +24,7 @@ function FileView() {
       alert("Invalid file name!");
       return;
     }
-    createFile(FileName);
+    createFile(FileName,socket);
   };
 
   const handlerename = (file) => {

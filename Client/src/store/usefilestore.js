@@ -55,7 +55,7 @@ const usefilestore = create((set, get) => {
       }
     },
 
-    createFile: (fileName) => {
+    createFile: (fileName,socket) => {
       const id = uuidv4();
       const newFile = {
         id,
@@ -68,6 +68,7 @@ const usefilestore = create((set, get) => {
       set({ fileStructure: [...fileStructure, newFile] });
       set({ openFiles: [...openFileList, newFile] });
       set({ activeFile: newFile });
+      socket.emit("file_created",{fileName,id});
     },
 
     renameFile: (fileId, newName,socket) => {
@@ -140,18 +141,33 @@ const usefilestore = create((set, get) => {
       });
     },
 
+    handleCreateFile:({fileName,id})=>{
+      const newFile = {
+        id,
+        name: fileName,
+        content: ``,
+      };
+      const fileStructure = get().fileStructure;
+      const openFileList = get().openFiles;
+
+      set({ fileStructure: [...fileStructure, newFile] });
+      set({ openFiles: [...openFileList, newFile] });
+      set({ activeFile: newFile });
+    },
 
 
     setSocketListeners: (socket) => {
       socket.on("file_sync", get().handleFileUpdate);
       socket.on("req_file_sync", () => get().handlereqCodeSync(socket));
       socket.on("rename_file",get().handleRename);
-      socket.on("delete_file",get().handleDelete)
+      socket.on("delete_file",get().handleDelete);
+      socket.on("file_created",get().handleCreateFile);
 
       return () => {
         socket.off("file_sync",);
         socket.off("req_file_sync");
         socket.off("rename_file");
+        socket.off("file_created");
         socket.off("delete_file");
       };
     },
